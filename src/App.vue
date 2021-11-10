@@ -1,15 +1,21 @@
 <template>
   <div id="restaurant-forum">
-    <router-view/>
+    <Navbar/>
+    <main role="main" class="mt-5 bg-white">
+    <router-view />
+    </main>
   </div>
 </template>
 
 <script>
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import Navbar from './components/Navbar.vue'
 
 export default {
-  name: 'App'
+  components: {
+    Navbar
+  }
 }
 </script>
 
