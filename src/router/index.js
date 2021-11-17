@@ -58,6 +58,21 @@ const routes = [
     component: () => import ('../views/User')
   },
   {
+    path: '/admin',
+    exact: true,
+    redirect: '/admin/restaurants'
+  },
+  {
+    path: '/admin/restaurants',
+    name: 'admin-restaurants',
+    component: () => import ('../views/AdminRestaurants')
+  },
+  {
+    path: '/admin/restaurants/:id',
+    name: 'admin-restaurant',
+    component: () => import ('../views/AdminRestaurant')
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound
