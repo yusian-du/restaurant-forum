@@ -53,6 +53,11 @@ const routes = [
     component: () => import ('../views/UsersTop')
   },
   {
+    path: '/users/:id',
+    name: 'user',
+    component: () => import ('../views/User')
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound
