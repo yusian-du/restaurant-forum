@@ -65,6 +65,9 @@ export default {
             email: ''
         }
     },
+    created () {
+        this.fetchUser()
+    },
     methods: {
         fetchUser () {
             const { currentUser } = dummyUser
