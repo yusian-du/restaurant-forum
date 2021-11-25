@@ -168,6 +168,7 @@ export default {
           this.categories = data.categories
           this.isLoading = false
         } catch (error) {
+          this.isLoading = false
           console.log('error', error)
           Toast.fire({
             icon: 'error',

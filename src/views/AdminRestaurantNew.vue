@@ -1,7 +1,9 @@
 <template>
  <div class="container py-5">
     <!-- 餐廳表單 AdminRestaurantForm -->
-    <AdminRestaurantForm @after-submit="handleAfterSubmit" />
+    <AdminRestaurantForm
+      :is-processing="isProcessing"
+      @after-submit="handleAfterSubmit" />
   </div>
 </template>
 
