@@ -7,6 +7,21 @@ export default {
       return apiHelper.get('/admin/categories', {
         headers: { Authorization: `Bearer ${getToken()}` }
       })
+    },
+    create ({ name }) {
+      return apiHelper.post('/admin/categories', { name }, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      })
+    },
+    update ({ categoryId, name}) {
+      return apiHelper.put(`/admin/categories/${categoryId}`, { name }, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      })
+    },
+    delete ({ categoryId }) {
+      return apiHelper.delete(`/admin/categories/${categoryId}`, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      })
     }
   },
   restaurants: {
