@@ -17,7 +17,7 @@
           <router-link :to="{ name: 'restaurant', params: {id: restaurant.id }}">
             <img
               class="card-img"
-              :src="restaurant.image"
+              :src="restaurant.image | emptyImage"
             >
           </router-link>
         </div>
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { emptyImageFilter } from './../utils/mixins'
 import NavTabs from './../components/NavTabs.vue'
 import restaurantsAPI from './../apis/restaurants'
 import usersAPI from './../apis/users'
@@ -70,6 +71,7 @@ export default {
   components: {
         NavTabs
    },
+   mixins: [emptyImageFilter],
    data () {
      return {
        restaurants: []

@@ -3,7 +3,7 @@
     <div class="row no-gutters">
       <div class="col-md-4">
         <img
-          :src="user.image"
+          :src="user.image | emptyImage"
           width="300px"
           height="300px"
         >
@@ -63,7 +63,12 @@
 </template>
 
 <script>
+import { emptyImageFilter } from './../utils/mixins'
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
+
 export default {
+    mixins: [emptyImageFilter],
     props: {
         user: {
             type: Object,
@@ -83,12 +88,45 @@ export default {
             isFollowed: this.initialIsFollowed
         }
     },
+    watch: {
+      initialIsFollowed (isFollowed) {
+        this.isFollowed = isFollowed
+      }
+    },
     methods: {
-        addFollowing () {
+        async addFollowing (userId) {
+          try {
+            const { data } = await usersAPI.addFavorite({ userId })
+
+            if (data.status === 'error') {
+              throw new Error(data.message)
+            }
+
             this.isFollowed = true
+          } catch (error) {
+            console.error(error.message)
+            Toast.fire({
+              icon: 'error',
+              title: '無法加入追蹤，請稍後再試'
+            })
+          }
         },
-        deleteFollowing () {
+        async deleteFollowing (userId) {
+          try {
+            const { data } = await usersAPI.deleteFollowing({ userId })
+
+            if (data.status === 'error') {
+              throw new Error(data.message)
+            }
+
             this.isFollowed = false
+          } catch (error) {
+            console.error(error.message)
+            Toast.fire({
+              icon: 'error',
+              title: '無法取消追蹤，請稍後再試'
+            })
+          }
         }
     }
 }
