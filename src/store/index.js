@@ -13,7 +13,8 @@ export default new Vuex.Store({
       image: '',
       isAdmin: false
     },
-    isAuthenticated: false
+    isAuthenticated: false,
+    token: ''
   },
   mutations: {
     setCurrentUser (state, currentUser) {
@@ -22,17 +23,28 @@ export default new Vuex.Store({
         // 將 API 取得的 currentUser 覆蓋掉 Vuex state 中的 currentUser
         ...currentUser 
       }
+      // 將使用者驗證用的 token 儲存在 state 中
+      state.token = localStorage.getItem('token')
       // 將使用者的登入狀態改為 true
       state.isAuthenticated = true
+    },
+    revokeAuthentication (state) {
+      state.currentUser = {}
+      state.isAuthenticated = false
+      state.token = ''
+      localStorage.removeItem('token')
     }
   },
   actions: {
     async fetchCurrentUser ({ commit }) {
       try {
-        // 呼叫 usersAPI.getCurrentUser() 方法，並將 response 顯示出來
-        const { data } = await usersAPI.getCurrentUser()
-        
-        const { id, name, email, image, isAdmin } = data
+        const { data: { profile }, statusText } = await usersAPI.getCurrentUser()
+
+        if (statusText !== 'OK') {
+          throw new Error(statusText)
+        }
+
+        const { id, name, email, image, isAdmin } = profile
 
         commit('setCurrentUser', {
           id,
@@ -41,8 +53,10 @@ export default new Vuex.Store({
           image,
           isAdmin
         })
+        return true
       } catch (error) {
-        console.error(error.message)
+        console.error('can not fetch user information')
+        return false
       }
     } 
   },
