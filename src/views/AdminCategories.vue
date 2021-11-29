@@ -25,7 +25,8 @@
         </div>
       </div>
     </form>
-    <table class="table">
+    <Spinner v-if="isLoading" />
+    <table  v-else class="table">
       <thead class="thead-dark">
         <tr>
           <th
@@ -108,17 +109,20 @@
 import AdminNav from './../components/AdminNav'
 import adminAPI from './../apis/admin'
 import { apiHelper, Toast } from './../utils/helpers'
+import Spinner from './../components/Spinner'
 
 export default {
   components: {
-    AdminNav
+    AdminNav,
+    Spinner
   },
   // 3. 定義 Vue 中使用的 data 資料
   data () {
     return {
       newCategoryName: '',
       categories: [],
-      isProcessing: false
+      isProcessing: false,
+      isLoading: true
     }
   },
   // 5. 調用 `fetchCategories` 方法
@@ -129,6 +133,7 @@ export default {
     // 4. 定義 `fetchCategories` 方法，把 `dummyData` 帶入 Vue 物件
     async fetchCategories () {
       try {
+        this.isLoading = true
         const { data, statusText } = await adminAPI.categories.get()
 
         if (statusText !== 'OK') {
@@ -140,7 +145,9 @@ export default {
           ...category,
           isEditing: false
         }))
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: '無法取得餐廳類別，請稍後再試'

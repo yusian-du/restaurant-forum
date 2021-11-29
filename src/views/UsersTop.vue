@@ -1,6 +1,9 @@
 <template>
   <div class="container py-5">
     <NavTabs />
+
+    <Spinner v-if="isLoading" />
+    <template v-else>
     <h1 class="mt-5">
       美食達人
     </h1>
@@ -39,6 +42,7 @@
         </p>
       </div>
     </div>
+    </template>
   </div>
 </template>
 
@@ -47,11 +51,13 @@ import NavTabs from './../components/NavTabs.vue'
 import { emptyImageFilter } from './../utils/mixins'
 import usersAPI from './../apis/users'
 import { Toast } from './../utils/helpers'
+import Spinner from './../components/Spinner'
 
 export default {
     name: 'UsersTop',
     components: {
-        NavTabs
+        NavTabs,
+        Spinner
     },
     mixins: [emptyImageFilter],
     data () {
@@ -65,7 +71,12 @@ export default {
     methods: {
       async fetchTopUsers () {
         try {
+          this.isLoading = true
           const { data } = await usersAPI.getTopUsers()
+
+          if (data.status === 'error') {
+          throw new Error(data.message)
+          }
 
           this.users = data.users.map(user => ({
           id: user.id,
@@ -74,8 +85,10 @@ export default {
           followerCount: user.FollowerCount,
           isFollowed: user.isFollowed
           }))
+          this.isLoading = false
         } catch (error) {
           console.log(error)
+          this.isLoading = false
           Toast.fire({
             icon: 'error',
             title: '無法取得美食達人，請稍後再試'
